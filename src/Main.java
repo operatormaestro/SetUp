@@ -59,20 +59,25 @@ public class Main {
 
         try (ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(path + "/zip_output.zip"))) {
             for (Path s : list) {
-                File file = new File(s.toString());
-                try (FileInputStream fis = new FileInputStream(file)) {
+                String filepath = s.toString();
+                try (FileInputStream fis = new FileInputStream(filepath)) {
                     ZipEntry entry = new ZipEntry(s.getFileName().toString());
                     zout.putNextEntry(entry);
                     byte[] buffer = new byte[fis.available()];
                     fis.read(buffer);
                     zout.write(buffer);
                     zout.closeEntry();
-                    file.delete();
+                    deleteFile(filepath);
                 }
             }
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
+    }
+
+    public static void deleteFile(String path) {
+        File file = new File(path);
+        file.delete();
     }
 
     public static void openZip(String filesPath, String directoryPath) {
